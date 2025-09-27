@@ -63,15 +63,53 @@ lazy_static::lazy_static! {
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> ={
+        let mut map = HashMap::new();
+        //ID服务器
+        map.insert("unloccustom-rendezvous-serverk_pin".to_string(), "papen.com.cn:21116".to_string());
+        //中继服务器
+        map.insert("relay-server".to_string(), "papen.com.cn:21117".to_string());
+        //API服务器
+        map.insert("api-server".to_string(), "http://papen.com.cn:21114".to_string());
+        //KEY
+        map.insert("key".to_string(), "kmVguztfN7pwlsAoSF2AArSTLVbdSebUsPwGGmIvoyc=".to_string());
+        //PIN解锁
+        map.insert("unlock_pin".to_string(), "!Smwt2021!".to_string());
+        //完全控制
+        map.insert("access-mode".to_string(), "full".to_string());
+        //允许远程修改配置
+        map.insert("allow-remote-config-modification".to_string(), "Y".to_string());
+        //只允许密码访问
+        map.insert("averification-method".to_string(), "use-permanent-password".to_string());
+        //使用DirectX捕获屏幕
+        map.insert("enable-directx-capture".to_string(), "Y".to_string());
+        //隐藏连接管理窗口
+        map.insert("allow-hide-cm".to_string(), "Y".to_string());
+        //隐藏托盘图标
+        map.insert("hide-tray".to_string(), "Y".to_string());
+        RwLock::new(map)
+    };
     pub static ref DEFAULT_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref OVERWRITE_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
-    pub static ref OVERWRITE_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
+    pub static ref OVERWRITE_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = {
+        let mut map = HashMap::new();
+        //使用D3D渲染
+        map.insert("allow-d3d-render".to_string(), "Y".to_string());
+        //启动时检查软件更新
+        map.insert("enable-check-update".to_string(), "N".to_string());
+        //自动更新
+        map.insert("allow-auto-update".to_string(), "N".to_string());
+        //启用UDP打洞
+        map.insert("enable-udp-punch".to_string(), "Y".to_string());
+        //启用IPv6 P2P连接
+        map.insert("enable-ipv6-punch".to_string(), "Y".to_string());
+        RwLock::new(map)
+    };
     pub static ref HARD_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
+        //访问密码
         map.insert("password".to_string(), "!Smwt2021!".to_string());
-		map.insert("unlock_pin".to_string(), "!Smwt2021!".to_string());
         RwLock::new(map)
     };
     pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
@@ -105,8 +143,8 @@ const CHARS: &[char] = &[
     'm', 'n', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
 
-pub const RENDEZVOUS_SERVERS: &[&str] = &["papen.com.cn"];
-pub const RS_PUB_KEY: &str = "kmVguztfN7pwlsAoSF2AArSTLVbdSebUsPwGGmIvoyc=";
+pub const RENDEZVOUS_SERVERS: &[&str] = &["rs-ny.rustdesk.com"];
+pub const RS_PUB_KEY: &str = "OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=";
 
 pub const RENDEZVOUS_PORT: i32 = 21116;
 pub const RELAY_PORT: i32 = 21117;
