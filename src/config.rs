@@ -57,15 +57,18 @@ lazy_static::lazy_static! {
     static ref TRUSTED_DEVICES: RwLock<(Vec<TrustedDevice>, bool)> = Default::default();
     static ref ONLINE: Mutex<HashMap<String, i64>> = Default::default();
     pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new("".to_owned());
-    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = Default::default();
+    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = {
+        let mut map = HashMap::new();
+        //ID服务器
+        map.insert("custom-rendezvous-server".to_string(), "papen.com.cn:21116".to_string());
+        RwLock::new(map)
+    };
     pub static ref APP_NAME: RwLock<String> = RwLock::new("RustDesk".to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
-        //ID服务器
-        map.insert("custom-rendezvous-server".to_string(), "papen.com.cn:21116".to_string());
         //中继服务器
         map.insert("relay-server".to_string(), "papen.com.cn:21117".to_string());
         //API服务器
@@ -127,6 +130,8 @@ lazy_static::lazy_static! {
     };
     pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
+        //预设用户名称
+        map.insert("preset-user-name".to_string(), "SMWT".to_string());
         //预设设备组名称
         map.insert("preset-device-group-name".to_string(), "世名文体".to_string());
         //隐藏连接管理窗口，可能不生效
