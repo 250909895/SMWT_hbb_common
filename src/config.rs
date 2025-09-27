@@ -119,6 +119,8 @@ lazy_static::lazy_static! {
         map.insert("disable-discovery-panel".to_string(), "Y".to_string());
         //默认提权运行
         map.insert("pre-elevate-service".to_string(), "Y".to_string());
+        //被控端更改连接权限
+        map.insert("allow-remote-cm-modification".to_string(), "N".to_string());
         RwLock::new(map)
     };
     pub static ref OVERWRITE_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
