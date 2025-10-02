@@ -59,24 +59,25 @@ lazy_static::lazy_static! {
     static ref TRUSTED_DEVICES: RwLock<(Vec<TrustedDevice>, bool)> = Default::default();
     static ref ONLINE: Mutex<HashMap<String, i64>> = Default::default();
     //ID服务器，所有客户端生效
-    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new((option_env!("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com")).to_owned());
-    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new((option_env!("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com")).to_owned());
-    pub static ref APP_NAME: RwLock<String> = RwLock::new((option_env!("APP_NAME").unwrap_or("RustDesk")).to_owned());
+    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new((td::env::var("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com".to_string)).to_owned());
+    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new((td::env::var("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com".to_string)).to_owned());
+    td::env::var("APP_NAME").unwrap_or("RustDesk".to_string());
+    pub static ref APP_NAME: RwLock<String> = RwLock::new((td::env::var("APP_NAME").unwrap_or("RustDesk".to_string)).to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //ID服务器，该配置部分客户端生效，故弃用
-        map.insert("custom-rendezvous-server".to_string(), (option_env!("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com")).to_string());
+        map.insert("custom-rendezvous-server".to_string(), (td::env::var("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com".to_string)).to_string());
         //中继服务器
-        map.insert("relay-server".to_string(), (option_env!("RELAY_SERVER").unwrap_or("rs-ny.rustdesk.com")).to_string());
+        map.insert("relay-server".to_string(), (td::env::var("RELAY_SERVER").unwrap_or("rs-ny.rustdesk.com".to_string)).to_string());
         //API服务器
-        map.insert("api-server".to_string(), (option_env!("API_SERVER").unwrap_or("https://admin.rustdesk.com")).to_string());
+        map.insert("api-server".to_string(), (td::env::var("API_SERVER").unwrap_or("https://admin.rustdesk.com".to_string)).to_string());
         //KEY "kmVguztfN7pwlsAoSF2AArSTLVbdSebUsPwGGmIvoyc="
-        map.insert("key".to_string(), (option_env!("RS_PUB_KEY").unwrap_or("OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=")).to_string());
+        map.insert("key".to_string(), (td::env::var("RS_PUB_KEY").unwrap_or("OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=".to_string)).to_string());
         //PIN解锁，需要配合PIN修复代码块使用
-        map.insert("unlock_pin".to_string(), (option_env!("DEFAULT_PASSWORD").unwrap_or("")).to_string());
+        map.insert("unlock_pin".to_string(), (td::env::var("DEFAULT_PASSWORD").unwrap_or("".to_string)).to_string());
         //访问模式，custom：自定义，full：完全控制，view：共享屏幕
         map.insert("access-mode".to_string(), "full".to_string());
         //允许远程重启
@@ -127,13 +128,13 @@ lazy_static::lazy_static! {
     pub static ref HARD_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //被控默认密码
-        map.insert("password".to_string(), (option_env!("DEFAULT_PASSWORD").unwrap_or("")).to_string());
+        map.insert("password".to_string(), (td::env::var("DEFAULT_PASSWORD").unwrap_or("".to_string)).to_string());
         RwLock::new(map)
     };
     pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //默认连接密码
-        map.insert("default-connect-password".to_string(), (option_env!("DEFAULT_PASSWORD").unwrap_or("")).to_string());
+        map.insert("default-connect-password".to_string(), (td::env::var("DEFAULT_PASSWORD").unwrap_or("".to_string)).to_string());
         RwLock::new(map)
     };
 }
