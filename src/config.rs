@@ -67,8 +67,8 @@ lazy_static::lazy_static! {
     static ref TRUSTED_DEVICES: RwLock<(Vec<TrustedDevice>, bool)> = Default::default();
     static ref ONLINE: Mutex<HashMap<String, i64>> = Default::default();
     //ID服务器，所有客户端生效
-    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_owned());
-    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_owned());
+    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RENDEZVOUS_SERVER"), RENDEZVOUS_SERVER).to_owned());
+    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RENDEZVOUS_SERVER"), RENDEZVOUS_SERVER).to_owned());
     pub static ref APP_NAME: RwLock<String> = RwLock::new(env_or_default(option_env!("APP_NAME"), RUSTDESK_RENDEZVOUS).to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
@@ -76,7 +76,7 @@ lazy_static::lazy_static! {
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //ID服务器，该配置部分客户端生效，故弃用
-        map.insert("custom-rendezvous-server".to_string(), env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_string());
+        map.insert("custom-rendezvous-server".to_string(), env_or_default(option_env!("RENDEZVOUS_SERVER"), RENDEZVOUS_SERVER).to_string());
         //中继服务器
         map.insert("relay-server".to_string(), env_or_default(option_env!("RELAY_SERVER"), RELAY_SERVER).to_string());
         //API服务器
