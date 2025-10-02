@@ -68,7 +68,7 @@ lazy_static::lazy_static! {
     //ID服务器，所有客户端生效
     pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RENDEZVOUS_SERVER"), RENDEZVOUS_SERVER).to_owned());
     pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RENDEZVOUS_SERVER"), RENDEZVOUS_SERVER).to_owned());
-    pub static ref APP_NAME: RwLock<String> = RwLock::new(env_or_default(option_env!("APP_NAME"), RUSTDESK_RENDEZVOUS).to_owned());
+    pub static ref APP_NAME: RwLock<String> = RwLock::new(env_or_default(option_env!("APP_NAME"), APP_NAME).to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
@@ -108,6 +108,8 @@ lazy_static::lazy_static! {
     pub static ref OVERWRITE_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
+        //主题色，dark：深色，light：浅色，system：跟随系统
+        map.insert("theme ".to_string(), "dark".to_string());
         //使用D3D渲染
         map.insert("allow-d3d-render".to_string(), "Y".to_string());
         //启动时检查软件更新
