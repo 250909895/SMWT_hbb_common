@@ -28,6 +28,14 @@ use crate::{
     },
 };
 
+/// 获取环境变量（编译期），若为空则返回默认值
+fn env_or_default(env: Option<&'static str>, default: &'static str) -> &'static str {
+    match env {
+        Some(val) if !val.is_empty() => val,
+        _ => default,
+    }
+}
+
 pub const RENDEZVOUS_TIMEOUT: u64 = 12_000;
 pub const CONNECT_TIMEOUT: u64 = 18_000;
 pub const READ_TIMEOUT: u64 = 18_000;
@@ -49,6 +57,8 @@ lazy_static::lazy_static! {
 type Size = (i32, i32, i32, i32);
 type KeyPair = (Vec<u8>, Vec<u8>);
 
+
+
 lazy_static::lazy_static! {
     static ref CONFIG: RwLock<Config> = RwLock::new(Config::load());
     static ref CONFIG2: RwLock<Config2> = RwLock::new(Config2::load());
@@ -57,24 +67,24 @@ lazy_static::lazy_static! {
     static ref TRUSTED_DEVICES: RwLock<(Vec<TrustedDevice>, bool)> = Default::default();
     static ref ONLINE: Mutex<HashMap<String, i64>> = Default::default();
     //ID服务器，所有客户端生效
-    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new("papen.com.cn:21116".to_owned());
-    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new("papen.com.cn:21116".to_owned());
-    pub static ref APP_NAME: RwLock<String> = RwLock::new("RustDesk".to_owned());
+    pub static ref PROD_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_owned());
+    pub static ref EXE_RENDEZVOUS_SERVER: RwLock<String> = RwLock::new(env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_owned());
+    pub static ref APP_NAME: RwLock<String> = RwLock::new(env_or_default(option_env!("APP_NAME"), RUSTDESK_RENDEZVOUS).to_owned());
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
     pub static ref DEFAULT_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //ID服务器，该配置部分客户端生效，故弃用
-        map.insert("custom-rendezvous-server".to_string(), "papen.com.cn:21116".to_string());
+        map.insert("custom-rendezvous-server".to_string(), env_or_default(option_env!("RUSTDESK_RENDEZVOUS"), RUSTDESK_RENDEZVOUS).to_string());
         //中继服务器
-        map.insert("relay-server".to_string(), "papen.com.cn:21117".to_string());
+        map.insert("relay-server".to_string(), env_or_default(option_env!("RELAY_SERVER"), RELAY_SERVER).to_string());
         //API服务器
-        map.insert("api-server".to_string(), "http://papen.com.cn:21114".to_string());
-        //KEY
-        map.insert("key".to_string(), "kmVguztfN7pwlsAoSF2AArSTLVbdSebUsPwGGmIvoyc=".to_string());
+        map.insert("api-server".to_string(), env_or_default(option_env!("API_SERVER"), API_SERVER).to_string());
+        //KEY "kmVguztfN7pwlsAoSF2AArSTLVbdSebUsPwGGmIvoyc="
+        map.insert("key".to_string(), env_or_default(option_env!("RS_PUB_KEY"), RS_PUB_KEY).to_string());
         //PIN解锁，需要配合PIN修复代码块使用
-        map.insert("unlock_pin".to_string(), "!Smwt2021!".to_string());
+        map.insert("unlock_pin".to_string(), env_or_default(option_env!("DEFAULT_PASSWORD"), DEFAULT_PASSWORD).to_string());
         //访问模式，custom：自定义，full：完全控制，view：共享屏幕
         map.insert("access-mode".to_string(), "full".to_string());
         //允许远程重启
@@ -87,10 +97,6 @@ lazy_static::lazy_static! {
         map.insert("verification-method".to_string(), "use-both-passwords".to_string());
         //使用DirectX捕获屏幕
         map.insert("enable-directx-capture".to_string(), "Y".to_string());
-        //预设地址簿名称
-        map.insert("preset-address-book-name".to_string(), "世名文体".to_string());
-        //预设地址簿标签
-        map.insert("preset-address-book-tag".to_string(), "".to_string());
         RwLock::new(map)
     };
     pub static ref OVERWRITE_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
@@ -127,19 +133,13 @@ lazy_static::lazy_static! {
     pub static ref HARD_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //被控默认密码
-        map.insert("password".to_string(), "!Smwt2021!".to_string());
+        map.insert("password".to_string(), env_or_default(option_env!("DEFAULT_PASSWORD"), DEFAULT_PASSWORD).to_string());
         RwLock::new(map)
     };
     pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
-        //预设用户
-        map.insert("preset-user-name".to_string(), "SMWT".to_string());
-        //预设组策略
-        map.insert("preset-strategy-name".to_string(), "".to_string());
-        //预设设备组
-        map.insert("preset-device-group-name".to_string(), "世名文体".to_string());
         //默认连接密码
-        map.insert("default-connect-password".to_string(), "!Smwt2021!".to_string());
+        map.insert("default-connect-password".to_string(), env_or_default(option_env!("DEFAULT_PASSWORD"), DEFAULT_PASSWORD).to_string());
         RwLock::new(map)
     };
 }
@@ -2613,7 +2613,7 @@ pub mod keys {
     pub const OPTION_DEFAULT_CONNECT_PASSWORD: &str = "default-connect-password";
     //定义配置参数常量名
     pub const OPTION_HIDE_TRAY: &str = "hide-tray";
-    pub const OPTION_ALLOW_HIDE_CM: &str = "allow-hide-tray";
+    pub const OPTION_ALLOW_HIDE_CM: &str = "allow-hide-cm";
     pub const OPTION_ONE_WAY_CLIPBOARD_REDIRECTION: &str = "one-way-clipboard-redirection";
     pub const OPTION_ALLOW_LOGON_SCREEN_PASSWORD: &str = "allow-logon-screen-password";
     pub const OPTION_ONE_WAY_FILE_TRANSFER: &str = "one-way-file-transfer";
