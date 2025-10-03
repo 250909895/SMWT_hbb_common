@@ -1,5 +1,5 @@
+//使得模组能获取调用方传入的环境变量
 use std::env;
-
 fn set_env(key: &str) {
     if let Some(val_os) = env::var_os(key) {
         if let Some(val) = val_os.to_str() {
@@ -7,9 +7,8 @@ fn set_env(key: &str) {
         }
     }
 }
-
 fn main() {
-    set_env("APP_NAME");
+    //传递环境变量到编译时环境
     set_env("RENDEZVOUS_SERVER");
     set_env("RELAY_SERVER");
     set_env("API_SERVER");
