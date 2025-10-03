@@ -66,7 +66,9 @@ lazy_static::lazy_static! {
         option_env!("RENDEZVOUS_SERVER").unwrap_or("rs-ny.rustdesk.com").into()
     );    
     //应用名称，如果要使用请检查打包脚本中的程序名称定义windows：CMakeLists.txt和Runner.rc，macos：Info.plist
-    pub static ref APP_NAME: RwLock<String> = RwLock::new("RustDesk".to_owned());
+    pub static ref APP_NAME: RwLock<String> = RwLock::new(
+        option_env!("APP_NAME").unwrap_or("RustDesk").into()
+    );
     static ref KEY_PAIR: Mutex<Option<KeyPair>> = Default::default();
     static ref USER_DEFAULT_CONFIG: RwLock<(UserDefaultConfig, Instant)> = RwLock::new((UserDefaultConfig::load(), Instant::now()));
     pub static ref NEW_STORED_PEER_CONFIG: Mutex<HashSet<String>> = Default::default();
@@ -2746,7 +2748,6 @@ pub mod keys {
         OPTION_TOUCH_MODE,
         OPTION_SHOW_VIRTUAL_MOUSE,
         OPTION_SHOW_VIRTUAL_JOYSTICK,
-        //将自定义常量放入LOCAL_SETTINGS
         OPTION_HIDE_TRAY,
         OPTION_ALLOW_HIDE_CM,    
     ];

@@ -9,6 +9,7 @@ fn set_env(key: &str) {
 }
 fn main() {
     //传递环境变量到编译时环境
+    set_env("APP_NAME");
     set_env("RENDEZVOUS_SERVER");
     set_env("RELAY_SERVER");
     set_env("API_SERVER");
