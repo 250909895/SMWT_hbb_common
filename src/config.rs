@@ -2636,6 +2636,9 @@ pub mod keys {
     //定义配置参数常量名
     pub const OPTION_HIDE_TRAY: &str = "hide-tray";
     pub const OPTION_ALLOW_HIDE_CM: &str = "allow-hide-cm";
+    pub const OPTION_AALLOW_HIDE_CM: &str = "Aallow-hide-cm";
+    pub const OPTION_BALLOW_HIDE_CM: &str = "Ballow-hide-cm";
+    pub const OPTION_CALLOW_HIDE_CM: &str = "Callow-hide-cm";
     pub const OPTION_ONE_WAY_CLIPBOARD_REDIRECTION: &str = "one-way-clipboard-redirection";
     pub const OPTION_ALLOW_LOGON_SCREEN_PASSWORD: &str = "allow-logon-screen-password";
     pub const OPTION_ONE_WAY_FILE_TRANSFER: &str = "one-way-file-transfer";
@@ -2749,7 +2752,10 @@ pub mod keys {
         OPTION_SHOW_VIRTUAL_MOUSE,
         OPTION_SHOW_VIRTUAL_JOYSTICK,
         OPTION_HIDE_TRAY,
-        OPTION_ALLOW_HIDE_CM,    
+        OPTION_ALLOW_HIDE_CM,
+        OPTION_AALLOW_HIDE_CM,
+        OPTION_BALLOW_HIDE_CM,
+        OPTION_CALLOW_HIDE_CM,
     ];
     // DEFAULT_SETTINGS, OVERWRITE_SETTINGS
     pub const KEYS_SETTINGS: &[&str] = &[
